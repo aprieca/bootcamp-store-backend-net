@@ -1,7 +1,11 @@
-﻿using bootcamp_store_backend.Application.Dtos;
+﻿using bootcamp_store_backend.Application;
+using bootcamp_store_backend.Application.Dtos;
 using bootcamp_store_backend.Domain.Entities;
 using bootcamp_store_backend.Domain.Persistence;
+using bootcamp_store_backend.Infrastructure.Specs;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+using System.Reflection;
 
 
 namespace bootcamp_store_backend.Infrastructure.Persistence;
@@ -9,10 +13,12 @@ namespace bootcamp_store_backend.Infrastructure.Persistence;
 public class ItemRepository : GenericRepository<Item>, IItemRepository
 {
     private StoreContext _storeContext;
+    private readonly ISpecificationParser<Item> _specificationParser;
 
-    public ItemRepository(StoreContext storeContext) : base(storeContext)
+    public ItemRepository(StoreContext storeContext, ISpecificationParser<Item> specificationParser) : base(storeContext)
     {
         _storeContext = storeContext;
+        _specificationParser = specificationParser;
     }
 
     public override Item GetById(long id)
@@ -63,5 +69,36 @@ public class ItemRepository : GenericRepository<Item>, IItemRepository
         }
         return items.ToList();
     }
+
+    public PagedList<ItemDto> GetItemsByCriteriaPaged(string? filter, PaginationParameters paginationParameters)
+    {
+        var items = _storeContext.Items.Include(i => i.Category).AsQueryable();
+
+        if (!string.IsNullOrEmpty(filter))
+        {
+            Specification<Item> specification = _specificationParser.ParseSpecification(filter);
+            items = specification.ApplySpecification(items);
+        }
+
+        if (!string.IsNullOrEmpty(paginationParameters.Sort))
+        {
+            items = ApplySortOrder(items, paginationParameters.Sort);
+        }
+
+        var itemsDto = items.Select(i => new ItemDto
+        {
+            Id = i.Id,
+            Name = i.Name,
+            Description = i.Description,
+            Price = i.Price,
+            Image = i.Image,
+            CategoryId = i.CategoryId,
+            CategoryName = i.Category.Name
+        });
+
+        return PagedList<ItemDto>.ToPagedList(itemsDto, paginationParameters.PageNumber, paginationParameters.PageSize);
+    }
+
 }
+
 

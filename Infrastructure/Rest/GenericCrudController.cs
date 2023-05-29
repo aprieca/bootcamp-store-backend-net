@@ -24,7 +24,7 @@ public class GenericCrudController <D> : ControllerBase where D : class
 
     [HttpGet("{id}")]
     [Produces("application/json")]
-    public ActionResult<D> Get(long id)
+    public virtual ActionResult<D> Get(long id)
     {
         try
         {
@@ -42,7 +42,7 @@ public class GenericCrudController <D> : ControllerBase where D : class
     [Produces("application/json")]
     [Consumes("application/json")]
 
-    public ActionResult<D> Insert(D dto)
+    public virtual ActionResult<D> Insert(D dto)
     {
         if (dto == null)
             return BadRequest();
@@ -54,7 +54,7 @@ public class GenericCrudController <D> : ControllerBase where D : class
     [Produces("application/json")]
     [Consumes("application/json")]
 
-    public ActionResult<D> Update(D dto)
+    public virtual ActionResult<D> Update(D dto)
     {
         if (dto == null)
             return BadRequest();
@@ -63,7 +63,7 @@ public class GenericCrudController <D> : ControllerBase where D : class
     }
 
     [HttpDelete("{id}")]
-    public ActionResult Delete(long id)
+    public virtual ActionResult Delete(long id)
     {
         try
         {

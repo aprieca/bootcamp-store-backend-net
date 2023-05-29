@@ -9,5 +9,6 @@ namespace bootcamp_store_backend.Domain.Persistence
         T Insert(T entity);
         T Update(T entity);
         void Delete(long id);
+        //IQueryable<T> ApplySortOrder(IQueryable<T> entities, string sortOrder);
     }
 }
