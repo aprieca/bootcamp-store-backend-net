@@ -16,6 +16,7 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IItemRepository, ItemRepository>();
 builder.Services.AddScoped(typeof(ISpecificationParser<>), typeof(SpecificationParser<>));
 builder.Services.AddScoped<IImageVerifier, ImageVerifier>();
+builder.Services.AddScoped<IStoreUnitOfWork, StoreUnitOfWork>();
 builder.Services.AddAutoMapper(typeof(CategoryMapperProfile));
 builder.Services.AddAutoMapper(typeof(ItemMapperProfile));
 

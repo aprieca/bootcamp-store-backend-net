@@ -1,8 +1,10 @@
 ﻿using bootcamp_store_backend.Domain.Entities;
 
-namespace bootcamp_store_backend.Domain.Persistence;
-
-public interface ICategoryRepository : IGenericRepository<Category>
+namespace bootcamp_store_backend.Domain.Persistence
 {
-    
+    public interface ICategoryRepository : IGenericRepository<Category>
+    {
+
+    }
 }
+

@@ -1,12 +1,14 @@
 ﻿using bootcamp_store_backend.Application.Dtos;
 
-namespace bootcamp_store_backend.Application.Services;
-
-public interface IItemService : IGenericService<ItemDto>
+namespace bootcamp_store_backend.Application.Services
 {
-    List<ItemDto> GetAllByCategoryId(long categoryId);
+    public interface IItemService : IGenericService<ItemDto>
+    {
+        List<ItemDto> GetAllByCategoryId(long categoryId);
 
-    PagedList<ItemDto> GetItemsByCriteriaPaged(string? filter, PaginationParameters paginationParameters);
+        PagedList<ItemDto> GetItemsByCriteriaPaged(string? filter, PaginationParameters paginationParameters);
 
-    List<ItemDto> postNewItemsFromCategory(long categoryId, List<ItemDto> items);
+        List<ItemDto> PostNewItemsFromCategory(long categoryId, List<ItemDto> items);
+    }
 }
+

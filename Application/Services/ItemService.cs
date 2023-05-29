@@ -4,18 +4,21 @@ using bootcamp_store_backend.Domain.Entities;
 using bootcamp_store_backend.Domain.Persistence;
 using bootcamp_store_backend.Domain.Services;
 
+
 namespace bootcamp_store_backend.Application.Services
 {
     public class ItemService : GenericService<Item,ItemDto> , IItemService
     {
         private readonly IItemRepository _itemRepository;
         private readonly IImageVerifier _imageVerifier;
+        private readonly IStoreUnitOfWork _storeUnitOfWork;
 
-
-        public ItemService(IItemRepository repository, IMapper mapper, IImageVerifier imageVerifier) : base(repository, mapper)
+        public ItemService(IItemRepository repository, IMapper mapper, IImageVerifier imageVerifier,IStoreUnitOfWork storeUnitOfWork) : base(repository, mapper)
         {
             _itemRepository = repository;
             _imageVerifier = imageVerifier;
+            _storeUnitOfWork = storeUnitOfWork;
+
 
         }
 
@@ -39,15 +42,20 @@ namespace bootcamp_store_backend.Application.Services
             return base.Insert(dto);
         }
 
-        public List<ItemDto> postNewItemsFromCategory(long categoryId, List<ItemDto> items)
+        public List<ItemDto> PostNewItemsFromCategory(long categoryId, List<ItemDto> items)
         {
             List<ItemDto> newItems = new List<ItemDto>();
-            foreach (var item in items)
+            using (IWork work = _storeUnitOfWork.Init())
             {
-                item.CategoryId = categoryId;
-                newItems.Add(Insert(item));
+                foreach (var item in items)
+                {
+                    item.CategoryId = categoryId;
+                    newItems.Add(Insert(item));
+                }
+
+                work.Complete();
+                return newItems;
             }
-            return newItems;
         }
 
         public override ItemDto Update(ItemDto dto)

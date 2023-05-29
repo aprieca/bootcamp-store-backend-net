@@ -1,27 +1,30 @@
 ﻿using bootcamp_store_backend.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace bootcamp_store_backend.Infrastructure.Persistence;
-
-public class StoreContext:DbContext
+namespace bootcamp_store_backend.Infrastructure.Persistence
 {
-    public StoreContext(DbContextOptions<StoreContext> options) : base(options){ }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-
-        base.OnConfiguring(optionsBuilder);
-    }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    public class StoreContext : DbContext
     {
-        modelBuilder.Entity<Item>()
-            .HasOne(i => i.Category)
-            .WithMany()
-            .HasForeignKey(i => i.CategoryId)
-            .IsRequired();
+        public StoreContext(DbContextOptions<StoreContext> options) : base(options) { }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+
+            base.OnConfiguring(optionsBuilder);
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Item>()
+                .HasOne(i => i.Category)
+                .WithMany()
+                .HasForeignKey(i => i.CategoryId)
+                .IsRequired();
+
+        }
+
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Item> Items { get; set; }
     }
-
-    public DbSet<Category> Categories { get; set; }
-    public DbSet<Item> Items { get; set; }
 }
+

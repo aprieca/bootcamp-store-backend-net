@@ -1,6 +1,5 @@
 ﻿using bootcamp_store_backend.Application.Dtos;
 using bootcamp_store_backend.Application.Services;
-using bootcamp_store_backend.Domain.Persistence;
 using bootcamp_store_backend.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,7 +12,6 @@ namespace bootcamp_store_backend.Infrastructure.Rest
     public class CategoriesController : GenericCrudController<CategoryDto>
     {
 
-        //private readonly ICategoryService _categoryService;
         private readonly ILogger<CategoriesController> _logger;
 
 
@@ -31,7 +29,7 @@ namespace bootcamp_store_backend.Infrastructure.Rest
             }
             catch (InvalidImageException)
             {
-                _logger.LogInformation("Invalid image inserting category with {dto.name} name", dto.Name);
+                _logger.LogInformation("Invalid image inserting category with {dto.Name} name", dto.Name);
                 return BadRequest();
             }
         }
